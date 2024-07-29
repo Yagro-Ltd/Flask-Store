@@ -16,26 +16,11 @@ import os
 import sys
 import warnings
 
-from setuptools import setup, find_packages
-from setuptools.command.test import test as TestCommand
-
-
-class PyTest(TestCommand):
-
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        # import here, cause outside the eggs aren't loaded
-        import pytest
-        errno = pytest.main(self.test_args)
-        sys.exit(errno)
+from setuptools import find_packages, setup
 
 
 def read_requirements(filename):
-    """ Read requirements file and process them into a list
+    """Read requirements file and process them into a list
     for usage in the setup function.
 
     Arguments
@@ -55,18 +40,19 @@ def read_requirements(filename):
 
     try:
         if os.path.isfile(filename):
-            with open(filename, 'rb') as f:
+            with open(filename, "rb") as f:
                 for line in f.readlines():
                     line = line.strip()
-                    if not line or line.startswith(b'#') or line == '':
+                    if not line or line.startswith(b"#") or line == "":
                         continue
-                    requirements.append(line.decode('utf-8'))
+                    requirements.append(line.decode("utf-8"))
         else:
-            warnings.warn('{0} was not found'.format(filename))
+            warnings.warn("{0} was not found".format(filename))
     except IOError:
-        warnings.warn('{0} was not found'.format(filename))
+        warnings.warn("{0} was not found".format(filename))
 
     return requirements
+
 
 # Get current working directory
 
@@ -77,51 +63,42 @@ except NameError:
 
 # Change to current working directory
 
-if SETUP_DIRNAME != '':
+if SETUP_DIRNAME != "":
     os.chdir(SETUP_DIRNAME)
 
 # Requirements
 
-INSTALL_REQUIREMENTS = read_requirements('REQS.txt')
-TESTING_REQUIREMENTS = read_requirements('REQS.TESTING.txt')
-DEVELOP_REQUIREMENTS = read_requirements('REQS.DEVELOP.txt') \
-    + TESTING_REQUIREMENTS
+INSTALL_REQUIREMENTS = read_requirements("REQS.txt")
+TESTING_REQUIREMENTS = read_requirements("REQS.TESTING.txt")
+DEVELOP_REQUIREMENTS = read_requirements("REQS.DEVELOP.txt") + TESTING_REQUIREMENTS
 
 # Include the Change Log on PyPi
 
-long_description = open('README.rst').read()
-changelog = open('CHANGELOG.rst').read()
-long_description += '\n' + changelog
+long_description = open("README.rst").read()
+changelog = open("CHANGELOG.rst").read()
+long_description += "\n" + changelog
 
 # Setup
 
 setup(
-    name='Flask-Store',
-    version=open('VERSION').read().strip(),
-    author='SOON_',
-    author_email='dorks@thisissoon.com',
-    maintainer='Chris Reeves',
-    maintainer_email='hello@chris.reeves.io',
-    url='http://flask-store.soon.build',
-    description='Provides Django-Storages like file storage backends for '
-                'Flask Applications.',
+    name="Flask-Store",
+    version=open("VERSION").read().strip(),
+    author="SOON_",
+    author_email="dorks@thisissoon.com",
+    maintainer="Chris Reeves",
+    maintainer_email="hello@chris.reeves.io",
+    url="http://flask-store.soon.build",
+    description="Provides Django-Storages like file storage backends for "
+    "Flask Applications.",
     long_description=long_description,
-    packages=find_packages(
-        exclude=[
-            'tests'
-        ]),
+    packages=find_packages(exclude=["tests"]),
     include_package_data=True,
     zip_safe=False,
     # Dependencies
     install_requires=INSTALL_REQUIREMENTS,
-    extras_require={
-        'develop': DEVELOP_REQUIREMENTS
-    },
+    extras_require={"develop": DEVELOP_REQUIREMENTS},
     # Testing
     tests_require=TESTING_REQUIREMENTS,
-    cmdclass={
-        'test': PyTest
-    },
     # Dependencies not hosted on PyPi
     dependency_links=[],
     # Classifiers for Package Indexing
@@ -129,19 +106,21 @@ setup(
     entry_points={},
     # Meta
     classifiers=[
-        'Framework :: Flask',
-        'Environment :: Web Environment',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Development Status :: 3 - Alpha',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Topic :: Software Development',
-        'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Internet :: WWW/HTTP :: Dynamic Content'],
-    license='MIT',
-    keywords=['Flask', 'Files', 'Storage'])
+        "Framework :: Flask",
+        "Environment :: Web Environment",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Development Status :: 3 - Alpha",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Topic :: Software Development",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    ],
+    license="MIT",
+    keywords=["Flask", "Files", "Storage"],
+)
